@@ -1,0 +1,37 @@
+services:
+  web:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      DATABASE_URL: mysql+pymysql://${MYSQL_USER:-appy_user}:${MYSQL_PASSWORD:-appy_dev_password}@db:3306/${MYSQL_DATABASE:-appy_db}
+      SECRET_KEY: ${SECRET_KEY:-chave-dev-trocar-antes-de-usar-em-rede}
+      PORT: 5000
+      APPY_ADMIN_USER: ${APPY_ADMIN_USER:-admin}
+      APPY_ADMIN_PASSWORD: ${APPY_ADMIN_PASSWORD:-troque_por_senha_forte}
+      COOKIE_SECURE: ${COOKIE_SECURE:-0}
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: mysql:8.4
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-appy_db}
+      MYSQL_USER: ${MYSQL_USER:-appy_user}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-appy_dev_password}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-root_dev_password}
+    # Porta local opcional para conectar pelo MySQL Workbench.
+    ports:
+      - "127.0.0.1:3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -u root -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 20s
+volumes:
+  mysql_data:

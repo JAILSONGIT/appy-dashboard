@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login • APPY Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>body{min-height:100vh;background:#f4f7fb;display:grid;place-items:center;font-family:system-ui,-apple-system,sans-serif}.login-card{width:min(420px,94vw);border:0;border-radius:20px;box-shadow:0 12px 40px #17255412}.brand{font-size:1.7rem;font-weight:800;color:#172554}.btn-primary{background:#315efb;border-color:#315efb}</style>
+</head>
+<body>
+<div class="card login-card p-4 p-md-5">
+  <div class="brand">APPY<span class="text-primary">.</span></div>
+  <p class="text-secondary mb-4">Gestão de equipamentos • Acesso restrito</p>
+  {% with messages = get_flashed_messages(with_categories=true) %}{% if messages %}{% for category, message in messages %}<div class="alert alert-{{category}}">{{message}}</div>{% endfor %}{% endif %}{% endwith %}
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="mb-3"><label class="form-label" for="username">Usuário</label><input class="form-control" id="username" name="username" autocomplete="username" required></div>
+    <div class="mb-4"><label class="form-label" for="password">Senha</label><input class="form-control" id="password" name="password" type="password" autocomplete="current-password" required></div>
+    <button class="btn btn-primary w-100 py-2">Entrar</button>
+  </form>
+</div>
+</body>
+</html>
